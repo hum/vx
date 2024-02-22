@@ -1,6 +1,17 @@
 # vx
 Explain videos in plain text with LLMs.
 
+## Install CLI
+```bash
+> go install github.com/hum/vx/cmd/vx@latest
+> vx --help
+```
+
+## Install package
+```bash
+> go get github.com/hum/vx
+```
+
 ## Usage
 ### As a CLI
 The CLI allows specifying an alternative API to use (only tested with [Perplexity](https://perplexity.ai)), as well as a custom prompt or a model. For all options use:
