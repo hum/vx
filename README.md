@@ -28,28 +28,32 @@ Vx supports both streamed and non-streamed responses on the CLI. Use the `--stre
 package main
 
 import (
-  "fmt"
+	"context"
+	"fmt"
+	"time"
 
-  "github.com/hum/vx"
-  "github.com/sashabaranov/go-openai"
+	"github.com/hum/vx"
+	"github.com/sashabaranov/go-openai"
 )
 
 func main() {
-  oapi := openai.NewClient("token")
+	oapi := openai.NewClient("token")
 
-  r, err := vx.GetVideoExplanationRequests(client, vx.VideoExplanationOpts{
-    Url: "url",
-    Prompt: "Give me 5 bullet points from this text: ",
-    ChunkSize: 5 * time.Minute,
-  })
-  if err != nil {
-    panic(err)
-  }
+	r, err := vx.GetVideoExplanationRequests(oapi, vx.VideoExplanationOpts{
+		Url:       "url",
+		Prompt:    "Give me 5 bullet points from this text: ",
+		ChunkSize: 5 * time.Minute,
+	})
+	if err != nil {
+		panic(err)
+	}
 
-  response, err := client.CreateChatCompletion(context.TODO(), r)
-  if err != nil {
-    panic(err)
-  }
-  fmt.Println(response.Choices[0].Message.Content)
+	for _, request := range r {
+		response, err := oapi.CreateChatCompletion(context.TODO(), request)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(response.Choices[0].Message.Content)
+	}
 }
 ```
